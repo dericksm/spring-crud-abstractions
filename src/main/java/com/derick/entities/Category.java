@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Category implements Serializable {
+public class Category implements Serializable, BaseEntity {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)

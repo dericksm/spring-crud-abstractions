@@ -3,6 +3,9 @@ package com.derick.entities;
 import com.derick.entities.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +13,12 @@ import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Payment implements Serializable {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PaymentCard.class, name = "PaymentCard"),
+        @JsonSubTypes.Type(value = PaymentSlip.class, name = "PaymentSlip")
+})
+public abstract class Payment implements Serializable, BaseEntity {
 
     @Id
     private Integer id;
@@ -29,7 +37,7 @@ public abstract class Payment implements Serializable {
     public Payment(Integer id, PaymentStatus paymentStatus, Order order) {
         super();
         this.id = id;
-        this.paymentStatus = paymentStatus.getValue();
+        this.paymentStatus = (paymentStatus == null) ? null : paymentStatus.getValue();
         this.order = order;
     }
 

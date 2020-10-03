@@ -2,12 +2,14 @@ package com.derick.entities;
 
 import com.derick.entities.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+//@JsonTypeName("paymentSlip")
 public class PaymentSlip extends Payment implements Serializable {
 
 

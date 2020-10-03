@@ -10,17 +10,22 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Client implements Serializable {
+public class Client implements Serializable, BaseEntity {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
+
+    @Column(unique = true)
     private String email;
+
     private String identifier;
+
     private Integer clientType;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();
 
     @ElementCollection
@@ -39,7 +44,13 @@ public class Client implements Serializable {
         this.name = name;
         this.email = email;
         this.identifier = identifier;
-        this.clientType = clientType.getValue();
+        this.clientType = (clientType == null) ? null : clientType.getValue();
+    }
+
+    public Client(Integer id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
     }
 
     public Integer getId() {

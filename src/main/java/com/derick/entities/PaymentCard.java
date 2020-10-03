@@ -1,11 +1,13 @@
 package com.derick.entities;
 
 import com.derick.entities.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Entity
+//@JsonTypeName("paymentCard")
 public class PaymentCard extends Payment implements Serializable {
 
     private Integer installmentNumber;

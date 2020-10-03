@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "order_table")
-public class Order implements Serializable {
+public class Order implements Serializable, BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,6 +86,11 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public double getTotal(){
+        double sum = items.stream().map(item -> item.getSubTotal()).reduce(0D, (a, b) -> a + b);
+        return sum;
     }
 
     @Override

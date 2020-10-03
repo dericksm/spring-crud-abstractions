@@ -1,10 +1,13 @@
 package com.derick.entities;
 
+import com.derick.utils.FormatUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @Entity
 public class OrderItem implements Serializable {
@@ -79,5 +82,19 @@ public class OrderItem implements Serializable {
 
     public double getSubTotal(){
         return (price -discount) * quantity;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append(getProduct().getName());
+        sb.append(", Qte: ");
+        sb.append(getQuantity());
+        sb.append(", Preço Unitário: ");
+        sb.append(FormatUtils.formatToBrazilianMonetaryPattern(getPrice()));
+        sb.append(", Subtotal: ");
+        sb.append(FormatUtils.formatToBrazilianMonetaryPattern(getSubTotal()));
+        sb.append("\n");
+        return sb.toString();
     }
 }

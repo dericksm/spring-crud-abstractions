@@ -1,14 +1,14 @@
 package com.derick.entities;
 
+import com.derick.utils.FormatUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity(name = "order_table")
 public class Order implements Serializable, BaseEntity {
@@ -104,5 +104,26 @@ public class Order implements Serializable, BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("Pedido Número: ");
+        sb.append(getId());
+        sb.append(", Data: ");
+        sb.append(FormatUtils.formatDate(getDate()));
+        sb.append(", Cliente: ");
+        sb.append(getClient().getName());
+        sb.append(", Pagamento: ");
+        sb.append(getPayment().getPaymentStatus().getDescription());
+        sb.append("\nDetalhes:\n");
+        for (OrderItem item : getItems()) {
+            sb.append(item.toString());
+        }
+        sb.append("Valor total: ");
+        sb.append(FormatUtils.formatToBrazilianMonetaryPattern(getTotal()));
+        return sb.toString();
     }
 }

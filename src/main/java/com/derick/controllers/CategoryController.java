@@ -9,16 +9,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/categories")
+
 public class CategoryController extends AbstractController<Category, CategoryDTO> {
 
     @Autowired
@@ -27,5 +27,23 @@ public class CategoryController extends AbstractController<Category, CategoryDTO
     @Override
     public AbstractService<Category, CategoryDTO> getService() {
         return categoryService;
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Category> insert(@Valid @RequestBody CategoryDTO objDTO) {
+        return super.insert(objDTO);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Void> update(@PathVariable Integer id, @Valid @RequestBody CategoryDTO objDTO) {
+        return super.update(id, objDTO);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        return super.delete(id);
     }
 }

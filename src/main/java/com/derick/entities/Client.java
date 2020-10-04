@@ -1,13 +1,16 @@
 package com.derick.entities;
 
+import com.derick.entities.enums.ClientRole;
 import com.derick.entities.enums.ClientType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Client implements Serializable, BaseEntity {
@@ -25,6 +28,9 @@ public class Client implements Serializable, BaseEntity {
 
     private Integer clientType;
 
+    @JsonIgnore
+    private String password;
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();
 
@@ -32,22 +38,30 @@ public class Client implements Serializable, BaseEntity {
     @CollectionTable(name = "phones")
     private Set<String> phones = new HashSet<>();
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "roles")
+    private Set<Integer> roles = new HashSet<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
     public Client() {
+        addRole(ClientRole.CLIENT);
     }
 
-    public Client(Integer id, String name, String email, String identifier, ClientType clientType) {
+    public Client(Integer id, String name, String email, String identifier, ClientType clientType, String password) {
+        addRole(ClientRole.CLIENT);
         this.id = id;
         this.name = name;
         this.email = email;
         this.identifier = identifier;
         this.clientType = (clientType == null) ? null : clientType.getValue();
+        this.password = password;
     }
 
     public Client(Integer id, String name, String email) {
+        addRole(ClientRole.CLIENT);
         this.id = id;
         this.name = name;
         this.email = email;
@@ -92,6 +106,22 @@ public class Client implements Serializable, BaseEntity {
     public void setClientType(ClientType clientType) {
         this.clientType = clientType.getValue();
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<ClientRole> getRoles() {
+        return roles.stream().map(x -> ClientRole.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addRole(ClientRole role) {
+        this.roles.add(role.getValue());
+    };
 
     public List<Address> getAddresses() {
         return addresses;

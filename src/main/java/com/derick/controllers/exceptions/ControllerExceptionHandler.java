@@ -1,5 +1,6 @@
 package com.derick.controllers.exceptions;
 
+import com.derick.services.execeptions.AuthorizationException;
 import com.derick.services.execeptions.DataIntegrityException;
 import com.derick.services.execeptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,12 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorizationError(AuthorizationException ex, HttpServletRequest httpServletRequest){
+        StandardError error = new StandardError(HttpStatus.NOT_FOUND.value(), ex.getMessage(), System.currentTimeMillis(), httpServletRequest.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }

@@ -1,17 +1,24 @@
 package com.derick.services;
 
+import com.derick.entities.Client;
 import com.derick.entities.Order;
 import com.derick.entities.OrderItem;
 import com.derick.entities.PaymentSlip;
 import com.derick.entities.dto.OrderDTO;
 import com.derick.entities.enums.PaymentStatus;
 import com.derick.repositories.*;
+import com.derick.security.UserDetailsImpl;
+import com.derick.services.execeptions.AuthorizationException;
 import com.derick.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.Date;
 
 @Service
@@ -62,5 +69,15 @@ public class OrderService extends AbstractService<Order, OrderDTO> {
         orderItemRepository.saveAll(order.getItems());
         emailService.sendOrderConfirmationHtmlEmail(order);
         return order;
+    }
+
+    public Page<Order> findPageByClient(Integer page, Integer size, String orderBy, String direction){
+        UserDetailsImpl user = UserService.authenticatedUser();
+        if(user == null){
+            throw new AuthorizationException("Forbidden access!");
+        }
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
+        Client client = clientService.findById(user.getId());
+        return orderRepository.findByClient(client, pageRequest);
     }
 }

@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
 
 @Component
 @Profile("test")
@@ -19,8 +19,13 @@ public class TestConfig implements CommandLineRunner {
     private DbService dbService;
 
     @Bean
-    public EmailService emailService(){
+    public EmailService emailService() {
         return new MockMailService();
+    }
+
+    @Bean
+    public JavaMailSender javaMailSender() {
+        return new JavaMailSenderImpl();
     }
 
     @Override

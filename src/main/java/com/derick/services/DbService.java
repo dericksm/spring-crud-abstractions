@@ -1,10 +1,12 @@
 package com.derick.services;
 
 import com.derick.entities.*;
+import com.derick.entities.enums.ClientRole;
 import com.derick.entities.enums.ClientType;
 import com.derick.entities.enums.PaymentStatus;
 import com.derick.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -40,6 +42,9 @@ public class DbService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void instantiateDatabase() throws ParseException {
         Category cat1 = new Category(null, "Informática");
@@ -103,7 +108,9 @@ public class DbService {
         stateRepository.saveAll(Arrays.asList(est1, est2));
         cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-        Client cli1 = new Client(null, "Maria Silva", "derick_sm@hotmail.com", "36378912377", ClientType.PERSON);
+        Client cli1 = new Client(null, "Maria Silva", "derick@hotmail.com", "36378912377", ClientType.PERSON, bCryptPasswordEncoder.encode("123"));
+        Client cli2 = new Client(null, "Derick Souza", "derick_sm@hotmail.com", "36378912377", ClientType.PERSON, bCryptPasswordEncoder.encode("123"));
+        cli2.addRole(ClientRole.ADMIN);
 
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 
@@ -112,7 +119,7 @@ public class DbService {
 
         cli1.getAddresses().addAll(Arrays.asList(e1, e2));
 
-        clientRepository.saveAll(Arrays.asList(cli1));
+        clientRepository.saveAll(Arrays.asList(cli1, cli2));
         addressRepository.saveAll(Arrays.asList(e1, e2));
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");

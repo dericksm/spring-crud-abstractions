@@ -1,5 +1,6 @@
 package com.derick.services;
 
+import com.derick.entities.Client;
 import com.derick.entities.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public abstract class AbstractMailService implements EmailService {
         sendEmail(sm);
     }
 
-    protected SimpleMailMessage prepareSimpleMailMessageFromOrder(Order order){
+    protected SimpleMailMessage prepareSimpleMailMessageFromOrder(Order order) {
         SimpleMailMessage sm = new SimpleMailMessage();
         sm.setTo(order.getClient().getEmail());
         sm.setFrom(sender);
@@ -62,9 +63,24 @@ public abstract class AbstractMailService implements EmailService {
         try {
             MimeMessage sm = prepareMimeMessageFromOrder(order);
             sendHtmlEmail(sm);
-        } catch (MessagingException ex){
+        } catch (MessagingException ex) {
             sendOrderConfirmationEmail(order);
         }
     }
 
+    @Override
+    public void sendNewPasswordEmail(Client client, String newPassword) {
+        SimpleMailMessage sm = prepareNewPasswordEmail(client, newPassword);
+        sendEmail(sm);
+    }
+
+    protected SimpleMailMessage prepareNewPasswordEmail(Client client, String newPassword) {
+        SimpleMailMessage sm = new SimpleMailMessage();
+        sm.setTo(client.getEmail());
+        sm.setFrom(sender);
+        sm.setSubject("Solicitação de nova senha");
+        sm.setSentDate(new Date(System.currentTimeMillis()));
+        sm.setText("Nova senha " + newPassword);
+        return sm;
+    }
 }

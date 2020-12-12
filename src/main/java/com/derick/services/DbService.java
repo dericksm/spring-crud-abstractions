@@ -114,8 +114,8 @@ public class DbService {
 
         cli1.getPhones().addAll(Arrays.asList("27363323", "93838393"));
 
-        Address e1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", c1, cli1);
-        Address e2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", c2, cli1);
+        Address e1 = new Address(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", c1, cli2);
+        Address e2 = new Address(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", c2, cli2);
 
         cli1.getAddresses().addAll(Arrays.asList(e1, e2));
 

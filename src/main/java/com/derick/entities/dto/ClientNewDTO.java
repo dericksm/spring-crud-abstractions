@@ -45,6 +45,8 @@ public class ClientNewDTO implements Serializable {
 
     private Integer cityId;
 
+    private Integer stateId;
+
     public ClientNewDTO() {
     }
 
@@ -158,6 +160,14 @@ public class ClientNewDTO implements Serializable {
 
     public void setCityId(Integer cityId) {
         this.cityId = cityId;
+    }
+
+    public Integer getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(Integer stateId) {
+        this.stateId = stateId;
     }
 }
 

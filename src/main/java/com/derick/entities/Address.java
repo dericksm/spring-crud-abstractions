@@ -1,6 +1,5 @@
 package com.derick.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -10,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Address implements Serializable {
 
-    @Id()
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String street;

@@ -1,5 +1,6 @@
 package com.derick.services;
 
+import com.derick.entities.Client;
 import com.derick.entities.Order;
 import org.springframework.mail.SimpleMailMessage;
 
@@ -14,4 +15,6 @@ public interface EmailService {
     void sendOrderConfirmationHtmlEmail(Order order);
 
     void sendHtmlEmail(MimeMessage msg);
+
+    void sendNewPasswordEmail(Client client, String newPassword);
 }

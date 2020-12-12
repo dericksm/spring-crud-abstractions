@@ -5,11 +5,13 @@ import com.derick.entities.dto.ClientDTO;
 import com.derick.entities.dto.ClientNewDTO;
 import com.derick.services.AbstractService;
 import com.derick.services.ClientService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -56,5 +58,17 @@ public class ClientController extends AbstractController<Client, ClientDTO> {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         return super.delete(id);
+    }
+
+    @PostMapping("/picture")
+    public ResponseEntity<Void> uploadProfilePicture(@RequestParam(value = "file") MultipartFile multipartFile) {
+        URI uri = clientService.uploadProfilePicture(multipartFile);
+        return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping(value=  "/email")
+    public ResponseEntity<Client> findByEmail(@RequestParam(value = "email") String email){
+        Client client = clientService.findByEmail(email);
+        return ResponseEntity.ok().body(client);
     }
 }

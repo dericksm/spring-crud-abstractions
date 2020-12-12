@@ -1,0 +1,8 @@
+package com.derick.services.execeptions;
+
+public class AuthorizationException extends RuntimeException {
+
+    public AuthorizationException(String message) {
+        super(message);
+    }
+}
